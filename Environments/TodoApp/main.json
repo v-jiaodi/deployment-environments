@@ -20,6 +20,7 @@
     "location": {
       "type": "string",
       "minLength": 1,
+      "defaultValue": "[resourceGroup().location]",
       "metadata": {
         "description": "Primary location for all resources"
       }
@@ -68,6 +69,14 @@
       "type": "string",
       "defaultValue": ""
     },
+    "apiAppExists": {
+      "type": "bool",
+      "defaultValue": false
+    },
+    "webAppExists": {
+      "type": "bool",
+      "defaultValue": false
+    },
     "useAPIM": {
       "type": "bool",
       "defaultValue": false,
@@ -80,6 +89,13 @@
       "defaultValue": "",
       "metadata": {
         "description": "Id of the user or app to assign application roles"
+      }
+    },
+    "webApiBaseUrl": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The base URL used by the web service for sending API requests"
       }
     }
   },

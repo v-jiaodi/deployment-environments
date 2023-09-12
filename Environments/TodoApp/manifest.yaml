@@ -8,13 +8,8 @@ templatePath: main.json
 
 parameters:
   - id: environmentName
-    name: Name
+    name: environmentName
     description: 'Name of the Web App.'
     type: string
     required: true
 
-  - id: location
-    name: location
-    description: 'location of the Web App.'
-    type: string
-    required: true
