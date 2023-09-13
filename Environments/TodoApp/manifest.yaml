@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=https://github.com/Azure/deployment-environments/releases/download/2022-11-11-preview/manifest.schema.json
-name: TodoApp
+name: Todo-nodejs-mongo
 version: 1.0.0
 summary: Azure Todo nodejs APP Environment
 description: Deploys an Azure Web App
