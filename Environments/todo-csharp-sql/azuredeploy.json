@@ -1345,10 +1345,12 @@
                         "defaultValue": "AZURE-SQL-CONNECTION-STRING"
                       },
                       "sqlAdminPassword": {
-                        "type": "securestring"
+                        "type": "securestring",
+                        "defaultValue": "Password01!"
                       },
                       "appUserPassword": {
-                        "type": "securestring"
+                        "type": "securestring",
+                        "defaultValue": "Password01!"
                       }
                     },
                     "resources": [
