@@ -1468,7 +1468,10 @@
                         "type": "string",
                         "value": "[parameters('databaseName')]"
                       }
-                    }
+                    },
+                    "dependsOn": [
+                      "[resourceId('Microsoft.Resources/deployments', 'keyvault')]"
+                    ]
                   }
                 }
               }
