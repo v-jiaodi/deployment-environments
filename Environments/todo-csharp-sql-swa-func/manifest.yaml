@@ -2,7 +2,7 @@
 name: Todo-csharp-sql-swa-func
 version: 1.0.0
 summary: Azure Todo DotNet func APP Environment
-description: Deploys an Azure Web App
+description: Deploys an Azure func Web App
 runner: ARM
 templatePath: azuredeploy.json
 

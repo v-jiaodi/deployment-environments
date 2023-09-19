@@ -1,5 +1,5 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "$schema":"https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "metadata": {
     "_generator": {
@@ -11,19 +11,19 @@
   "parameters": {
     "environmentName": {
       "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
       "metadata": {
         "description": "Name of the the environment which is used to generate a short unique hash used in all resources."
-      },
-      "maxLength": 64,
-        "minLength": 1
+      }
     },
     "location": {
       "type": "string",
       "defaultValue": "[resourceGroup().location]",
+      "minLength": 1,
       "metadata": {
         "description": "Primary location for all resources"
-      },
-      "minLength": 1
+      }
     },
     "apiServiceName": {
       "type": "string",
@@ -329,7 +329,8 @@
                       "name": "bicep",
                       "version": "0.21.1.54444",
                       "templateHash": "3134122572814386292"
-                    }
+                    },
+                    "description": "Creates an Azure App Service in an existing Azure App Service plan."
                   },
                   "parameters": {
                     "name": {
@@ -547,7 +548,8 @@
                               "name": "bicep",
                               "version": "0.21.1.54444",
                               "templateHash": "12385797959791820601"
-                            }
+                            },
+                            "description": "Updates app settings for an Azure App Service."
                           },
                           "parameters": {
                             "name": {
@@ -613,6 +615,7 @@
         }
       },
       "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'appserviceplan')]",
         "[resourceId('Microsoft.Resources/deployments', 'monitoring')]"
       ]
     },
@@ -627,7 +630,7 @@
         "mode": "Incremental",
         "parameters": {
           "name": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments','web'), '2022-09-01').outputs.SERVICE_WEB_NAME.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'web'), '2022-09-01').outputs.SERVICE_WEB_NAME.value]"
           },
           "appSettings": {
             "value": {
@@ -644,7 +647,8 @@
               "name": "bicep",
               "version": "0.21.1.54444",
               "templateHash": "12385797959791820601"
-            }
+            },
+            "description": "Updates app settings for an Azure App Service."
           },
           "parameters": {
             "name": {
@@ -822,7 +826,8 @@
                       "name": "bicep",
                       "version": "0.21.1.54444",
                       "templateHash": "3134122572814386292"
-                    }
+                    },
+                    "description": "Creates an Azure App Service in an existing Azure App Service plan."
                   },
                   "parameters": {
                     "name": {
@@ -1040,7 +1045,8 @@
                               "name": "bicep",
                               "version": "0.21.1.54444",
                               "templateHash": "12385797959791820601"
-                            }
+                            },
+                            "description": "Updates app settings for an Azure App Service."
                           },
                           "parameters": {
                             "name": {
@@ -1138,7 +1144,8 @@
               "name": "bicep",
               "version": "0.21.1.54444",
               "templateHash": "7211460666347195796"
-            }
+            },
+            "description": "Assigns an Azure Key Vault access policy."
           },
           "parameters": {
             "name": {
@@ -1297,7 +1304,8 @@
                       "name": "bicep",
                       "version": "0.21.1.54444",
                       "templateHash": "17180378298689662014"
-                    }
+                    },
+                    "description": "Creates an Azure Cosmos DB for MongoDB account with a database."
                   },
                   "parameters": {
                     "accountName": {
@@ -1404,7 +1412,8 @@
                               "name": "bicep",
                               "version": "0.21.1.54444",
                               "templateHash": "11031894815865564141"
-                            }
+                            },
+                            "description": "Creates an Azure Cosmos DB for MongoDB account."
                           },
                           "parameters": {
                             "name": {
@@ -1464,7 +1473,8 @@
                                       "name": "bicep",
                                       "version": "0.21.1.54444",
                                       "templateHash": "5954645402846745545"
-                                    }
+                                    },
+                                    "description": "Creates an Azure Cosmos DB account."
                                   },
                                   "parameters": {
                                     "name": {
@@ -1645,7 +1655,8 @@
               "name": "bicep",
               "version": "0.21.1.54444",
               "templateHash": "17869526305870464556"
-            }
+            },
+            "description": "Creates an Azure App Service plan."
           },
           "parameters": {
             "name": {
@@ -1727,7 +1738,8 @@
               "name": "bicep",
               "version": "0.21.1.54444",
               "templateHash": "2400067255859456248"
-            }
+            },
+            "description": "Creates an Azure Key Vault."
           },
           "parameters": {
             "name": {
@@ -1804,7 +1816,8 @@
               "name": "bicep",
               "version": "0.21.1.54444",
               "templateHash": "2414076572823487558"
-            }
+            },
+            "description": "Creates an Application Insights instance and a Log Analytics workspace."
           },
           "parameters": {
             "logAnalyticsName": {
@@ -1858,7 +1871,8 @@
                       "name": "bicep",
                       "version": "0.21.1.54444",
                       "templateHash": "10193120495091804809"
-                    }
+                    },
+                    "description": "Creates a Log Analytics workspace."
                   },
                   "parameters": {
                     "name": {
@@ -1941,7 +1955,8 @@
                       "name": "bicep",
                       "version": "0.21.1.54444",
                       "templateHash": "2044604789989991581"
-                    }
+                    },
+                    "description": "Creates an Application Insights instance based on an existing Log Analytics workspace."
                   },
                   "parameters": {
                     "name": {
@@ -2008,7 +2023,8 @@
                               "name": "bicep",
                               "version": "0.21.1.54444",
                               "templateHash": "13286902661935936101"
-                            }
+                            },
+                            "description": "Creates a dashboard for an Application Insights instance."
                           },
                           "parameters": {
                             "name": {
@@ -3318,7 +3334,8 @@
               "name": "bicep",
               "version": "0.21.1.54444",
               "templateHash": "8375777218735620263"
-            }
+            },
+            "description": "Creates an Azure API Management instance."
           },
           "parameters": {
             "name": {
@@ -3485,8 +3502,8 @@
             },
             "apiDisplayName": {
               "type": "string",
-              "maxLength": 300,
               "minLength": 1,
+              "maxLength": 300,
               "metadata": {
                 "description": "The Display Name of the API"
               }

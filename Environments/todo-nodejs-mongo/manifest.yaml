@@ -4,7 +4,7 @@ version: 1.0.0
 summary: Azure Todo nodejs APP Environment
 description: Deploys an Azure Web App
 runner: ARM
-templatePath: main.json
+templatePath: azuredeploy.json
 
 parameters:
   - id: environmentName
