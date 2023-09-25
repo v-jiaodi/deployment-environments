@@ -12,4 +12,14 @@ parameters:
     description: 'Name of the Web App.'
     type: string
     required: true
+  - id: sqlAdminPassword
+    name: sqlAdminPassword
+    description: 'sqlAdminPassword'
+    type: string
+    required: true
+  - id: appUserPassword
+    name: appUserPassword
+    description: 'appUserPassword'
+    type: string
+    required: true
 
