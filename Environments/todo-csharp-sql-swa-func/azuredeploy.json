@@ -1317,7 +1317,7 @@
                       "properties": {
                         "azCliVersion": "2.37.0",
                         "retentionInterval": "PT1H",
-                        "timeout": "PT5M",
+                        "timeout": "PT1H",
                         "cleanupPreference": "OnSuccess",
                         "environmentVariables": [
                           {
