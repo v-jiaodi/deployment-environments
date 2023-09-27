@@ -22,4 +22,9 @@ parameters:
     description: 'appUserPassword'
     type: string
     required: true
-
+  - id: principalId
+    name: principalId
+    description: 'principalId'
+    type: string
+    required: true
+  

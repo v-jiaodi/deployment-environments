@@ -85,14 +85,12 @@
     },
     "sqlAdminPassword": {
       "type": "securestring",
-      "defaultValue": "Password01!",
       "metadata": {
         "description": "SQL Server administrator password"
       }
     },
     "appUserPassword": {
       "type": "securestring",
-      "defaultValue": "Password01!",
       "metadata": {
         "description": "Application user password"
       }
@@ -1317,7 +1315,7 @@
                       "properties": {
                         "azCliVersion": "2.37.0",
                         "retentionInterval": "PT1H",
-                        "timeout": "PT1H",
+                        "timeout": "PT5M",
                         "cleanupPreference": "OnSuccess",
                         "environmentVariables": [
                           {

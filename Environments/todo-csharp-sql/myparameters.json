@@ -1,0 +1,15 @@
+{
+    "location":{
+        "value": "eastus2"
+    },
+    "sqlAdminPassword": {
+        "value": "Password01!"
+    },
+    "appUserPassword": {
+        "value": "Password01!"
+    },
+    "environmentName": {
+        "value": "jiaodev925"
+        
+    }
+}
