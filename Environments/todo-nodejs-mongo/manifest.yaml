@@ -12,4 +12,13 @@ parameters:
     description: 'Name of the Web App.'
     type: string
     required: true
+  - id: runtimeName
+    name: runtimeName
+    description: 'Name of the runtimeName.'
+    type: string
+    required: true
+    allowed:
+      - "node"
+      - "python"
+      - "dotnet"
 

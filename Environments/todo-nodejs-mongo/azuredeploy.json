@@ -78,6 +78,13 @@
       "metadata": {
         "description": "Id of the user or app to assign application roles"
       }
+    },
+    "runtimeName": {
+      "type": "string",
+      "defaultValue": "node",
+      "metadata": {
+        "description": "runtimeName"
+      }
     }
   },
   "variables": {
@@ -312,7 +319,7 @@
                     "value": "[parameters('appServicePlanId')]"
                   },
                   "runtimeName": {
-                    "value": "node"
+                    "value": "[parameters('runtimeName')]"
                   },
                   "runtimeVersion": {
                     "value": "18-lts"
@@ -809,7 +816,7 @@
                     "value": "[parameters('keyVaultName')]"
                   },
                   "runtimeName": {
-                    "value": "node"
+                    "value": "[parameters('runtimeName')]"
                   },
                   "runtimeVersion": {
                     "value": "18-lts"
