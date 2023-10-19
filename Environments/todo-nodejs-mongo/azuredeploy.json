@@ -319,7 +319,7 @@
                     "value": "[parameters('appServicePlanId')]"
                   },
                   "runtimeName": {
-                    "value": "[parameters('runtimeName')]"
+                    "value": "node"
                   },
                   "runtimeVersion": {
                     "value": "18-lts"
@@ -775,6 +775,10 @@
             "serviceName": {
               "type": "string",
               "defaultValue": "api"
+            },
+            "runtimeName": {
+              "type": "string",
+              "defaultValue": "[parameters('runtimeName')]"
             }
           },
           "resources": [
