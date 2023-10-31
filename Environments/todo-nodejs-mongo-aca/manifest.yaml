@@ -12,4 +12,12 @@ parameters:
     description: 'Name of the Web App.'
     type: string
     required: true
-
+  - id: repoUrl
+    name: repoUrl
+    type: string
+    description: Path the the application source code
+    default: "https://github.com/azure-samples/todo-nodejs-mongo-aca"
+    allowed:
+      - "https://github.com/azure-samples/todo-java-mongo-aca"
+      - "https://github.com/azure-samples/todo-nodejs-mongo-aca"
+      - "https://github.com/azure-samples/todo-python-mongo-aca"

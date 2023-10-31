@@ -97,7 +97,14 @@
         "metadata": {
           "description": "The base URL used by the web service for sending API requests"
         }
+      },
+      "repoUrl": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "URL of the GitHub repository containing the application code"
       }
+    }
     },
     "variables": {
       "$fxv#0": {

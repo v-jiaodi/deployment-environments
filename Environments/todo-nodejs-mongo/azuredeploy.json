@@ -79,11 +79,11 @@
         "description": "Id of the user or app to assign application roles"
       }
     },
-    "runtimeName": {
+     "repoUrl": {
       "type": "string",
-      "defaultValue": "node",
+      "defaultValue": "",
       "metadata": {
-        "description": "runtimeName"
+        "description": "URL of the GitHub repository containing the application code"
       }
     }
   },

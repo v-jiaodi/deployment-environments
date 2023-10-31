@@ -12,13 +12,12 @@ parameters:
     description: 'Name of the Web App.'
     type: string
     required: true
-  - id: runtimeName
-    name: runtimeName
-    description: 'Name of the runtimeName.'
+  - id: repoUrl
+    name: repoUrl
     type: string
-    required: true
+    description: Path the the application source code
+    default: "https://github.com/azure-samples/todo-nodejs-mongo"
     allowed:
-      - "node"
-      - "python"
-      - "dotnet"
-
+      - "https://github.com/azure-samples/todo-java-mongo"
+      - "https://github.com/azure-samples/todo-nodejs-mongo"
+      - "https://github.com/azure-samples/todo-python-mongo"
