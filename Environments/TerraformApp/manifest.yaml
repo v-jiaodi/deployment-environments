@@ -11,4 +11,4 @@ parameters:
   - id: "location"
     name: "Location"
     required: true
-    type: "string"S
+    type: "string"
