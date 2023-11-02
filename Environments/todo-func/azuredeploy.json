@@ -11,7 +11,6 @@
   "parameters": {
     "environmentName": {
       "type": "string",
-      "defaultValue": "[resourceGroup().location]",
       "minLength": 1,
       "maxLength": 64,
       "metadata": {
@@ -413,10 +412,10 @@
             ]
           },
           "runtimeName": {
-            "value": "[parameters('runtimeName')]"
+            "value": "[variables('runtimeName')]"
           },
           "runtimeVersion": {
-            "value": "[parameters('runtimeVersion')]"
+            "value": "[variables('runtimeVersion')]"
           },
           "appSettings": {
             "value": {
