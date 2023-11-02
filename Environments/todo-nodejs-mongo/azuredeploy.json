@@ -1,14 +1,25 @@
 {
-  "$schema":"https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "metadata": {
     "_generator": {
       "name": "bicep",
       "version": "0.21.1.54444",
-      "templateHash": "7003907845400455740"
+      "templateHash": "10809287839753264304"
     }
   },
   "parameters": {
+    "repoUrl": {
+      "type": "string",
+      "allowedValues": [
+          "https://github.com/azure-samples/todo-java-mongo",
+          "https://github.com/azure-samples/todo-nodejs-mongo",
+          "https://github.com/azure-samples/todo-python-mongo"
+      ],
+      "metadata": {
+        "description": "URL of the GitHub repository containing the application code"
+      }
+    },
     "environmentName": {
       "type": "string",
       "minLength": 1,
@@ -20,10 +31,10 @@
     "location": {
       "type": "string",
       "defaultValue": "[resourceGroup().location]",
-      "minLength": 1,
       "metadata": {
         "description": "Primary location for all resources"
-      }
+      },
+      "minLength": 1
     },
     "apiServiceName": {
       "type": "string",
@@ -77,13 +88,6 @@
       "defaultValue": "",
       "metadata": {
         "description": "Id of the user or app to assign application roles"
-      }
-    },
-     "repoUrl": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "URL of the GitHub repository containing the application code"
       }
     }
   },
@@ -227,14 +231,16 @@
     "resourceToken": "[toLower(uniqueString(subscription().id, parameters('environmentName'), parameters('location')))]",
     "tags": {
       "azd-env-name": "[parameters('environmentName')]"
-    }
+    },
+    "runtimeName":"[if(equals(parameters('repoUrl'), 'https://github.com/azure-samples/todo-java-mongo'), 'java', if(equals(parameters('repoUrl'), 'https://github.com/azure-samples/todo-python-mongo'), 'python','node'))]",
+    "runtimeVersion":"[if(equals(parameters('repoUrl'), 'https://github.com/azure-samples/todo-java-mongo'), '17-java17', if(equals(parameters('repoUrl'), 'https://github.com/azure-samples/todo-python-mongo'), '3.10','18-lts'))]"
   },
   "resources": [
-    {
+        {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
       "name": "web",
-      "properties": {
+            "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
         },
@@ -622,7 +628,6 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'appserviceplan')]",
         "[resourceId('Microsoft.Resources/deployments', 'monitoring')]"
       ]
     },
@@ -630,14 +635,14 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
       "name": "web-appsettings",
-      "properties": {
+            "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
         },
         "mode": "Incremental",
         "parameters": {
           "name": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'web'), '2022-09-01').outputs.SERVICE_WEB_NAME.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments','web'), '2022-09-01').outputs.SERVICE_WEB_NAME.value]"
           },
           "appSettings": {
             "value": {
@@ -692,8 +697,8 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
       "name": "api",
-      "properties": {
-        "expressionEvaluationOptions": {
+          "properties": {
+          "expressionEvaluationOptions": {
           "scope": "inner"
         },
         "mode": "Incremental",
@@ -719,6 +724,12 @@
               "[reference(resourceId('Microsoft.Resources/deployments', 'web'), '2022-09-01').outputs.SERVICE_WEB_URI.value]"
             ]
           },
+          "runtimeName": {
+            "value": "[variables('runtimeName')]"
+          },
+          "runtimeVersion": {
+            "value": "[variables('runtimeVersion')]"
+          },
           "appSettings": {
             "value": {
               "AZURE_COSMOS_CONNECTION_STRING_KEY": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos'), '2022-09-01').outputs.connectionStringKey.value]",
@@ -726,6 +737,9 @@
               "AZURE_COSMOS_ENDPOINT": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos'), '2022-09-01').outputs.endpoint.value]",
               "API_ALLOW_ORIGINS": "[reference(resourceId('Microsoft.Resources/deployments', 'web'), '2022-09-01').outputs.SERVICE_WEB_URI.value]"
             }
+          },
+          "appcommandline": {
+            "value": "[if(equals(variables('runtimeName'), 'python'), 'gunicorn --workers 4 --threads 2 --timeout 60 --access-logfile \"-\" --error-logfile \"-\" --bind=0.0.0.0:8000 -k uvicorn.workers.UvicornWorker todo.app:app', '')]"
           }
         },
         "template": {
@@ -735,7 +749,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.21.1.54444",
-              "templateHash": "6532204452296201630"
+              "templateHash": "17889685883996917557"
             }
           },
           "parameters": {
@@ -777,9 +791,23 @@
               "defaultValue": "api"
             },
             "runtimeName": {
-              "type": "string",
-              "defaultValue": "[parameters('runtimeName')]"
+              "type": "string"
+            },
+            "runtimeVersion": {
+              "type": "string"
+            },
+            "javaRuntimeOptions": {
+              "type": "array",
+              "defaultValue": [],
+              "metadata": {
+                "description": "JVM runtime options. Use this instead of defining JAVA_OPTS manually on appSettings."
+              }
             }
+          },
+          "variables": {
+            "defaultJavaRuntimeOptions": [
+              "-Djdk.attach.allowAttachSelf=true"
+            ]
           },
           "resources": [
             {
@@ -823,7 +851,7 @@
                     "value": "[parameters('runtimeName')]"
                   },
                   "runtimeVersion": {
-                    "value": "18-lts"
+                    "value": "[parameters('runtimeVersion')]"
                   },
                   "scmDoBuildDuringDeployment": {
                     "value": true
@@ -1134,7 +1162,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
       "name": "api-keyvault-access",
-      "properties": {
+            "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
         },
@@ -1206,7 +1234,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
       "name": "cosmos",
-      "properties": {
+            "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
         },
@@ -1639,7 +1667,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
       "name": "appserviceplan",
-      "properties": {
+            "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
         },
@@ -1724,7 +1752,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
       "name": "keyvault",
-      "properties": {
+            "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
         },
@@ -1803,7 +1831,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
       "name": "monitoring",
-      "properties": {
+            "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
         },
@@ -3320,7 +3348,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
       "name": "apim-deployment",
-      "properties": {
+            "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
         },
@@ -3461,7 +3489,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
       "name": "apim-api-deployment",
-      "properties": {
+            "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
         },

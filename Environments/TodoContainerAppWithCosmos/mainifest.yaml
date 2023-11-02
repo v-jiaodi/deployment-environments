@@ -20,6 +20,3 @@ parameters:
       - "https://github.com/azure-samples/todo-java-mongo-aca"
       - "https://github.com/azure-samples/todo-nodejs-mongo-aca"
       - "https://github.com/azure-samples/todo-python-mongo-aca"
-    
-    
-
