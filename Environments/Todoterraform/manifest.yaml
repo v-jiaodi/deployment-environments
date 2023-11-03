@@ -1,5 +1,5 @@
 name: TodoWebAppTF
-summary: Creates a web app
+summary: Creates a web app with TF
 description: Deploys an environment using Terraform containing a Web App
 runner: Terraform
 templatePath: main.tf
