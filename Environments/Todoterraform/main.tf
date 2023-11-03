@@ -11,8 +11,6 @@ variable "resource_group_name" {}
 
 data "azurerm_resource_group" "rg" {
   name = var.resource_group_name
-  location = var.location
-  tags = local.tags
 }
 # resource "azurecaf_name" "rg_name" {
 #   name          = var.environment_name
@@ -37,7 +35,7 @@ module "applicationinsights" {
   rg_name          = data.azurerm_resource_group.rg.name
   environment_name = var.environment_name
   workspace_id     = module.loganalytics.LOGANALYTICS_WORKSPACE_ID
-  tags             = data.azurerm_resource_group.rg.tags
+  tags             = local.tags
   resource_token   = local.resource_token
 }
 
@@ -48,7 +46,7 @@ module "loganalytics" {
   source         = "./modules/loganalytics"
   location       = var.location
   rg_name        = data.azurerm_resource_group.rg.name
-  tags           = data.azurerm_resource_group.rg.tags
+  tags           = local.tags
   resource_token = local.resource_token
 }
 
@@ -60,7 +58,7 @@ module "keyvault" {
   location                 = var.location
   principal_id             = var.principal_id
   rg_name                  = data.azurerm_resource_group.rg.name
-  tags                     = data.azurerm_resource_group.rg.tags
+  tags                     = local.tags
   resource_token           = local.resource_token
   access_policy_object_ids = [module.api.IDENTITY_PRINCIPAL_ID]
   secrets = [
@@ -78,7 +76,7 @@ module "cosmos" {
   source         = "./modules/cosmos"
   location       = var.location
   rg_name        = data.azurerm_resource_group.rg.name
-  tags           = data.azurerm_resource_group.rg.tags
+  tags           = local.tags
   resource_token = local.resource_token
 }
 
@@ -89,7 +87,7 @@ module "appserviceplan" {
   source         = "./modules/appserviceplan"
   location       = var.location
   rg_name        = data.azurerm_resource_group.rg.name
-  tags           = data.azurerm_resource_group.rg.tags
+  tags           = local.tags
   resource_token = local.resource_token
 }
 
