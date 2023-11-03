@@ -19,7 +19,6 @@
     },
     "location": {
       "type": "string",
-      "defaultValue": "[resourceGroup().location]",
       "minLength": 1,
       "metadata": {
         "description": "Primary location for all resources"
@@ -237,7 +236,7 @@
       "azd-env-name": "[parameters('environmentName')]"
     },
     "runtimeVersion": "18",
-    "runtimeName": "node"
+    "runtimeName":"node"
   },
   "resources": [
     {
