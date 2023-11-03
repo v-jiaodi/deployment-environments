@@ -7,19 +7,24 @@ locals {
 # ------------------------------------------------------------------------------------------------------
 # Deploy resource Group
 # ------------------------------------------------------------------------------------------------------
-resource "azurecaf_name" "rg_name" {
-  name          = var.environment_name
-  resource_type = "azurerm_resource_group"
-  random_length = 0
-  clean_input   = true
-}
+variable "resource_group_name" {}
 
-resource "azurerm_resource_group" "rg" {
-  name     = azurecaf_name.rg_name.result
-  location = var.location
-
-  tags = local.tags
+data "azurerm_resource_group" "rg" {
+  name = var.resource_group_name
 }
+# resource "azurecaf_name" "rg_name" {
+#   name          = var.environment_name
+#   resource_type = "azurerm_resource_group"
+#   random_length = 0
+#   clean_input   = true
+# }
+
+# resource "azurerm_resource_group" "rg" {
+#   name     = azurecaf_name.rg_name.result
+#   location = var.location
+
+#   tags = local.tags
+# }
 
 # ------------------------------------------------------------------------------------------------------
 # Deploy application insights
@@ -27,7 +32,7 @@ resource "azurerm_resource_group" "rg" {
 module "applicationinsights" {
   source           = "./modules/applicationinsights"
   location         = var.location
-  rg_name          = azurerm_resource_group.rg.name
+  rg_name          = data.azurerm_resource_group.rg.name
   environment_name = var.environment_name
   workspace_id     = module.loganalytics.LOGANALYTICS_WORKSPACE_ID
   tags             = azurerm_resource_group.rg.tags
@@ -40,7 +45,7 @@ module "applicationinsights" {
 module "loganalytics" {
   source         = "./modules/loganalytics"
   location       = var.location
-  rg_name        = azurerm_resource_group.rg.name
+  rg_name        = data.azurerm_resource_group.rg.name
   tags           = azurerm_resource_group.rg.tags
   resource_token = local.resource_token
 }
@@ -52,7 +57,7 @@ module "keyvault" {
   source                   = "./modules/keyvault"
   location                 = var.location
   principal_id             = var.principal_id
-  rg_name                  = azurerm_resource_group.rg.name
+  rg_name                  = data.azurerm_resource_group.rg.name
   tags                     = azurerm_resource_group.rg.tags
   resource_token           = local.resource_token
   access_policy_object_ids = [module.api.IDENTITY_PRINCIPAL_ID]
@@ -70,7 +75,7 @@ module "keyvault" {
 module "cosmos" {
   source         = "./modules/cosmos"
   location       = var.location
-  rg_name        = azurerm_resource_group.rg.name
+  rg_name        = data.azurerm_resource_group.rg.name
   tags           = azurerm_resource_group.rg.tags
   resource_token = local.resource_token
 }
@@ -81,7 +86,7 @@ module "cosmos" {
 module "appserviceplan" {
   source         = "./modules/appserviceplan"
   location       = var.location
-  rg_name        = azurerm_resource_group.rg.name
+  rg_name        = data.azurerm_resource_group.rg.name
   tags           = azurerm_resource_group.rg.tags
   resource_token = local.resource_token
 }
@@ -92,7 +97,7 @@ module "appserviceplan" {
 module "web" {
   source         = "./modules/appservicenode"
   location       = var.location
-  rg_name        = azurerm_resource_group.rg.name
+  rg_name        = data.azurerm_resource_group.rg.name
   resource_token = local.resource_token
 
   tags               = merge(local.tags, { azd-service-name : "web" })
@@ -114,7 +119,7 @@ module "web" {
 module "api" {
   source         = "./modules/appservicenode"
   location       = var.location
-  rg_name        = azurerm_resource_group.rg.name
+  rg_name        = data.azurerm_resource_group.rg.name
   resource_token = local.resource_token
 
   tags               = merge(local.tags, { "azd-service-name" : "api" })
@@ -144,7 +149,7 @@ module "apim" {
   source                    = "./modules/apim"
   name                      = "apim-${local.resource_token}"
   location                  = var.location
-  rg_name                   = azurerm_resource_group.rg.name
+  rg_name                   = data.azurerm_resource_group.rg.name
   tags                      = merge(local.tags, { "azd-service-name" : var.environment_name })
   application_insights_name = module.applicationinsights.APPLICATIONINSIGHTS_NAME
   sku                       = "Consumption"
@@ -157,7 +162,7 @@ module "apimApi" {
   count                    = var.useAPIM ? 1 : 0
   source                   = "./modules/apim-api"
   name                     = module.apim[0].APIM_SERVICE_NAME
-  rg_name                  = azurerm_resource_group.rg.name
+  rg_name                  = data.azurerm_resource_group.rg.name
   web_front_end_url        = module.web.URI
   api_management_logger_id = module.apim[0].API_MANAGEMENT_LOGGER_ID
   api_name                 = "todo-api"
