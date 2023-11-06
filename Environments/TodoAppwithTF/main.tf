@@ -153,7 +153,7 @@ module "apim" {
 # ------------------------------------------------------------------------------------------------------
 module "apimApi" {
   count                    = var.useAPIM ? 1 : 0
-  source                   = "./modules/apim-api"
+  source                   = "github.com/Azure-Samples/todo-java-postgresql-terraform/infra/modules/apim-api"
   name                     = module.apim[0].APIM_SERVICE_NAME
   rg_name                  = data.azurerm_resource_group.rg.name
   web_front_end_url        = module.web.URI
