@@ -117,7 +117,7 @@ module "web" {
 # Deploy app service api
 # ------------------------------------------------------------------------------------------------------
 module "api" {
-  source         = var.apinode
+  source         = "./modules/appservicepython"
   location       = var.location
   rg_name        = data.azurerm_resource_group.rg.name
   resource_token = local.resource_token
