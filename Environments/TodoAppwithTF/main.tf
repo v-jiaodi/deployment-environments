@@ -111,13 +111,13 @@ module "api" {
 # Deploy key vault
 # ------------------------------------------------------------------------------------------------------
 module "keyvault" {
-  source                   = "github.com/Azure-Samples/todo-java-postgresql-terraform/infra/modules/keyvault"
+  source                   = "./modules/keyvault"
   location                 = var.location
   principal_id             = var.principal_id
   rg_name                  = data.azurerm_resource_group.rg.name
   tags                     = local.tags
   resource_token           = local.resource_token
-  access_policy_object_ids = [module.api.IDENTITY_PRINCIPAL_ID,"cdd35078-f1bc-48ca-b249-c1032d016bd0"]
+  access_policy_object_ids = [module.api.IDENTITY_PRINCIPAL_ID,var.env_principal_id]
   secrets = [
     {
       name  = local.psql_connection_string_key
