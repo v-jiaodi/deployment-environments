@@ -17,7 +17,7 @@ data "azurerm_resource_group" "rg" {
 # Deploy application insights
 # ------------------------------------------------------------------------------------------------------
 module "applicationinsights" {
-  source           = "./modules/applicationinsights"
+  source           = "github.com/Azure-Samples/todo-java-postgresql-terraform/infra/modules/applicationinsights"
   location         = var.location
   rg_name          = data.azurerm_resource_group.rg.name
   environment_name = var.environment_name
@@ -30,7 +30,7 @@ module "applicationinsights" {
 # Deploy log analytics
 # ------------------------------------------------------------------------------------------------------
 module "loganalytics" {
-  source         = "./modules/loganalytics"
+  source         = "github.com/Azure-Samples/todo-java-postgresql-terraform/infra/modules/loganalytics"
   location       = var.location
   rg_name        = data.azurerm_resource_group.rg.name
   tags           = local.tags
@@ -41,7 +41,7 @@ module "loganalytics" {
 # Deploy PostgreSQL
 # ------------------------------------------------------------------------------------------------------
 module "postgresql" {
-  source         = "./modules/postgresql"
+  source         = "github.com/Azure-Samples/todo-java-postgresql-terraform/infra/modules/postgresql"
   location       = var.location
   rg_name        = data.azurerm_resource_group.rg.name
   tags           = local.tags
@@ -52,7 +52,7 @@ module "postgresql" {
 # Deploy app service plan
 # ------------------------------------------------------------------------------------------------------
 module "appserviceplan" {
-  source         = "./modules/appserviceplan"
+  source         = "github.com/Azure-Samples/todo-java-postgresql-terraform/infra/modules/appserviceplan"
   location       = var.location
   rg_name        = data.azurerm_resource_group.rg.name
   tags           = local.tags
@@ -63,7 +63,7 @@ module "appserviceplan" {
 # Deploy app service web app
 # ------------------------------------------------------------------------------------------------------
 module "web" {
-  source         = "./modules/appservicenode"
+  source         = "github.com/Azure-Samples/todo-java-postgresql-terraform/infra/modules/appservicenode"
   location       = var.location
   rg_name        = data.azurerm_resource_group.rg.name
   resource_token = local.resource_token
@@ -84,7 +84,7 @@ module "web" {
 # Deploy app service api
 # ------------------------------------------------------------------------------------------------------
 module "api" {
-  source         = "./modules/appservicejava"
+  source         = "github.com/Azure-Samples/todo-java-postgresql-terraform/infra/modules/appservicejava"
   location       = var.location
   rg_name        = data.azurerm_resource_group.rg.name
   resource_token = local.resource_token
@@ -111,7 +111,7 @@ module "api" {
 # Deploy key vault
 # ------------------------------------------------------------------------------------------------------
 module "keyvault" {
-  source                   = "./modules/keyvault"
+  source                   = "github.com/Azure-Samples/todo-java-postgresql-terraform/infra/modules/keyvault"
   location                 = var.location
   principal_id             = var.principal_id
   rg_name                  = data.azurerm_resource_group.rg.name
@@ -139,7 +139,7 @@ module "keyvault" {
 # ------------------------------------------------------------------------------------------------------
 module "apim" {
   count                     = var.useAPIM ? 1 : 0
-  source                    = "./modules/apim"
+  source                    = "github.com/Azure-Samples/todo-java-postgresql-terraform/infra/modules/apim"
   name                      = "apim-${local.resource_token}"
   location                  = var.location
   rg_name                   = data.azurerm_resource_group.rg.name
