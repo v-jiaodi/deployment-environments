@@ -17,7 +17,6 @@ parameters:
     required: true
     type: "string"
     description: Path the the application source code
-    default: "https://github.com/azure-samples/todo-nodejs-mongo-terraform"
     allowed:
       - "https://github.com/azure-samples/todo-nodejs-mongo-terraform"
       - "https://github.com/azure-samples/todo-python-mongo-terraform"
