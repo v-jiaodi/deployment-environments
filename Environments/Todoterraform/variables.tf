@@ -26,3 +26,7 @@ variable "useAPIM" {
   type        = bool
   default     = false
 }
+variable "repoUrl" {
+  description = "The name of the azd environment to be deployed"
+  type        = string
+}

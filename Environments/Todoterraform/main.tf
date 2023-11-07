@@ -3,6 +3,7 @@ locals {
   sha                          = base64encode(sha256("${var.environment_name}${var.location}${data.azurerm_client_config.current.subscription_id}"))
   resource_token               = substr(replace(lower(local.sha), "[^A-Za-z0-9_]", ""), 0, 13)
   cosmos_connection_string_key = "AZURE-COSMOS-CONNECTION-STRING"
+  apipp = var.repoUrl=="https://github.com/azure-samples/todo-nodejs-mongo-terraform"?"18-lts":"3.10"
 }
 # ------------------------------------------------------------------------------------------------------
 # Deploy resource Group
@@ -121,6 +122,7 @@ module "api" {
   location       = var.location
   rg_name        = data.azurerm_resource_group.rg.name
   resource_token = local.resource_token
+  runtime_version = local.apipp
 
   tags               = merge(local.tags, { "azd-service-name" : "api" })
   service_name       = "api"
