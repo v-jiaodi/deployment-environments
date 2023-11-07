@@ -20,7 +20,7 @@ resource "azurecaf_name" "web_name" {
   clean_input   = true
 }
 
-resource "azurerm_linux_web_app" "web" {
+resource "azurerm_linux_web_app" "webpython" {
   count = var.runtime_version=="3.10"?1:0
   name                = azurecaf_name.web_name.result
   location            = var.location
@@ -63,7 +63,7 @@ resource "azurerm_linux_web_app" "web" {
     }
   }
 }
-resource "azurerm_linux_web_app" "web" {
+resource "azurerm_linux_web_app" "webnode" {
   count = var.runtime_version=="18-lts"?1:0
   name                = azurecaf_name.web_name.result
   location            = var.location
@@ -110,7 +110,7 @@ resource "azurerm_linux_web_app" "web" {
 # This is a temporary solution until the azurerm provider supports the basicPublishingCredentialsPolicies resource type
 resource "null_resource" "webapp_basic_auth_disable" {
   triggers = {
-    account = azurerm_linux_web_app.web.name
+    account = false?azurerm_linux_web_app.webnode.name:azurerm_linux_web_app.webpython.name
   }
 
   provisioner "local-exec" {
