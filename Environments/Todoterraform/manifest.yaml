@@ -12,6 +12,14 @@ parameters:
     name: "Location"
     required: true
     type: "string"
+  - id: "principal_id"
+    name: "principal_id"
+    required: true
+    type: "string"
+  - id: "env_principal_id"
+    name: "env_principal_id"
+    required: true
+    type: "string"
   - id: "repoUrl"
     name: "repoUrl"
     required: true

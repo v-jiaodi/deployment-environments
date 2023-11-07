@@ -3,7 +3,7 @@ locals {
   sha                          = base64encode(sha256("${var.environment_name}${var.location}${data.azurerm_client_config.current.subscription_id}"))
   resource_token               = substr(replace(lower(local.sha), "[^A-Za-z0-9_]", ""), 0, 13)
   cosmos_connection_string_key = "AZURE-COSMOS-CONNECTION-STRING"
-  apipp = var.repoUrl=="https://github.com/azure-samples/todo-nodejs-mongo-terraform"?"18-lts":"3.10"
+  api_runtime = var.repoUrl=="https://github.com/azure-samples/todo-nodejs-mongo-terraform"?"18-lts":"3.10"
 }
 # ------------------------------------------------------------------------------------------------------
 # Deploy resource Group
@@ -13,25 +13,12 @@ variable "resource_group_name" {}
 data "azurerm_resource_group" "rg" {
   name = var.resource_group_name
 }
-# resource "azurecaf_name" "rg_name" {
-#   name          = var.environment_name
-#   resource_type = "azurerm_resource_group"
-#   random_length = 0
-#   clean_input   = true
-# }
-
-# resource "azurerm_resource_group" "rg" {
-#   name     = azurecaf_name.rg_name.result
-#   location = var.location
-
-#   tags = local.tags
-# }
 
 # ------------------------------------------------------------------------------------------------------
 # Deploy application insights
 # ------------------------------------------------------------------------------------------------------
 module "applicationinsights" {
-  source           = "./modules/applicationinsights"
+  source           = "github.com/Azure-Samples/todo-python-mongo-terraform/tree/main/infra/modules/applicationinsights"
   location         = var.location
   rg_name          = data.azurerm_resource_group.rg.name
   environment_name = var.environment_name
@@ -44,7 +31,7 @@ module "applicationinsights" {
 # Deploy log analytics
 # ------------------------------------------------------------------------------------------------------
 module "loganalytics" {
-  source         = "./modules/loganalytics"
+  source         = "github.com/Azure-Samples/todo-python-mongo-terraform/tree/main/infra/modules/loganalytics"
   location       = var.location
   rg_name        = data.azurerm_resource_group.rg.name
   tags           = local.tags
@@ -74,7 +61,7 @@ module "keyvault" {
 # Deploy cosmos
 # ------------------------------------------------------------------------------------------------------
 module "cosmos" {
-  source         = "./modules/cosmos"
+  source         = "github.com/Azure-Samples/todo-python-mongo-terraform/tree/main/infra/modules/cosmos"
   location       = var.location
   rg_name        = data.azurerm_resource_group.rg.name
   tags           = local.tags
@@ -85,7 +72,7 @@ module "cosmos" {
 # Deploy app service plan
 # ------------------------------------------------------------------------------------------------------
 module "appserviceplan" {
-  source         = "./modules/appserviceplan"
+  source         = "github.com/Azure-Samples/todo-python-mongo-terraform/tree/main/infra/modules/appserviceplan"
   location       = var.location
   rg_name        = data.azurerm_resource_group.rg.name
   tags           = local.tags
@@ -96,7 +83,7 @@ module "appserviceplan" {
 # Deploy app service web app
 # ------------------------------------------------------------------------------------------------------
 module "web" {
-  source         = "./modules/appservicenode"
+  source         = "github.com/Azure-Samples/todo-python-mongo-terraform/tree/main/infra/modules/appservicenode"
   location       = var.location
   rg_name        = data.azurerm_resource_group.rg.name
   resource_token = local.resource_token
@@ -118,11 +105,11 @@ module "web" {
 # Deploy app service api
 # ------------------------------------------------------------------------------------------------------
 module "api" {
-  source         = "./modules/appservicepython"
+  source         = "./modules/appservice"
   location       = var.location
   rg_name        = data.azurerm_resource_group.rg.name
   resource_token = local.resource_token
-  runtime_version = local.apipp
+  runtime_version = local.api_runtime
 
   tags               = merge(local.tags, { "azd-service-name" : "api" })
   service_name       = "api"
@@ -148,7 +135,7 @@ module "api" {
 # ------------------------------------------------------------------------------------------------------
 module "apim" {
   count                     = var.useAPIM ? 1 : 0
-  source                    = "./modules/apim"
+  source                    = "github.com/Azure-Samples/todo-python-mongo-terraform/tree/main/infra/modules/apim"
   name                      = "apim-${local.resource_token}"
   location                  = var.location
   rg_name                   = data.azurerm_resource_group.rg.name
@@ -162,7 +149,7 @@ module "apim" {
 # ------------------------------------------------------------------------------------------------------
 module "apimApi" {
   count                    = var.useAPIM ? 1 : 0
-  source                   = "./modules/apim-api"
+  source                   = "github.com/Azure-Samples/todo-python-mongo-terraform/tree/main/infra/modules/apim-api"
   name                     = module.apim[0].APIM_SERVICE_NAME
   rg_name                  = data.azurerm_resource_group.rg.name
   web_front_end_url        = module.web.URI

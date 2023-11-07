@@ -11,13 +11,11 @@ variable "environment_name" {
 variable "principal_id" {
   description = "The Id of the azd service principal to add to deployed keyvault access policies"
   type        = string
-  default     = "e55fd960-0a37-471f-bc20-0e636d737258"
 }
 
-variable "apinode" {
-  description = "The Id of the azd service principal to add to deployed keyvault access policies"
+variable "env_principal_id" {
+  description = "The Id of the Devcenter environment Type to add to deployed keyvault access policies"
   type        = string
-  default     = "github.com/Azure-Samples/todo-python-mongo-terraform/tree/main/infra/modules/appservicepython"
 }
 
 
@@ -27,6 +25,6 @@ variable "useAPIM" {
   default     = false
 }
 variable "repoUrl" {
-  description = "The name of the azd environment to be deployed"
+  description = "Path the the application source code"
   type        = string
 }
