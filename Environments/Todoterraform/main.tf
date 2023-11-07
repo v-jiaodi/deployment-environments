@@ -18,7 +18,7 @@ data "azurerm_resource_group" "rg" {
 # Deploy application insights
 # ------------------------------------------------------------------------------------------------------
 module "applicationinsights" {
-  source           = "github.com/Azure-Samples/todo-python-mongo-terraform/tree/main/infra/modules/applicationinsights"
+  source           = "github.com/Azure-Samples/todo-python-mongo-terraform/infra/modules/applicationinsights"
   location         = var.location
   rg_name          = data.azurerm_resource_group.rg.name
   environment_name = var.environment_name
@@ -31,7 +31,7 @@ module "applicationinsights" {
 # Deploy log analytics
 # ------------------------------------------------------------------------------------------------------
 module "loganalytics" {
-  source         = "github.com/Azure-Samples/todo-python-mongo-terraform/tree/main/infra/modules/loganalytics"
+  source         = "github.com/Azure-Samples/todo-python-mongo-terraform/infra/modules/loganalytics"
   location       = var.location
   rg_name        = data.azurerm_resource_group.rg.name
   tags           = local.tags
@@ -48,7 +48,7 @@ module "keyvault" {
   rg_name                  = data.azurerm_resource_group.rg.name
   tags                     = local.tags
   resource_token           = local.resource_token
-  access_policy_object_ids = [module.api.IDENTITY_PRINCIPAL_ID,"cdd35078-f1bc-48ca-b249-c1032d016bd0"]
+  access_policy_object_ids = [module.api.IDENTITY_PRINCIPAL_ID,var.var.env_principal_id]
   secrets = [
     {
       name  = local.cosmos_connection_string_key
@@ -61,7 +61,7 @@ module "keyvault" {
 # Deploy cosmos
 # ------------------------------------------------------------------------------------------------------
 module "cosmos" {
-  source         = "github.com/Azure-Samples/todo-python-mongo-terraform/tree/main/infra/modules/cosmos"
+  source         = "github.com/Azure-Samples/todo-python-mongo-terraform/infra/modules/cosmos"
   location       = var.location
   rg_name        = data.azurerm_resource_group.rg.name
   tags           = local.tags
@@ -72,7 +72,7 @@ module "cosmos" {
 # Deploy app service plan
 # ------------------------------------------------------------------------------------------------------
 module "appserviceplan" {
-  source         = "github.com/Azure-Samples/todo-python-mongo-terraform/tree/main/infra/modules/appserviceplan"
+  source         = "github.com/Azure-Samples/todo-python-mongo-terraform/infra/modules/appserviceplan"
   location       = var.location
   rg_name        = data.azurerm_resource_group.rg.name
   tags           = local.tags
@@ -83,7 +83,7 @@ module "appserviceplan" {
 # Deploy app service web app
 # ------------------------------------------------------------------------------------------------------
 module "web" {
-  source         = "github.com/Azure-Samples/todo-python-mongo-terraform/tree/main/infra/modules/appservicenode"
+  source         = "github.com/Azure-Samples/todo-python-mongo-terraform/infra/modules/appservicenode"
   location       = var.location
   rg_name        = data.azurerm_resource_group.rg.name
   resource_token = local.resource_token
@@ -135,7 +135,7 @@ module "api" {
 # ------------------------------------------------------------------------------------------------------
 module "apim" {
   count                     = var.useAPIM ? 1 : 0
-  source                    = "github.com/Azure-Samples/todo-python-mongo-terraform/tree/main/infra/modules/apim"
+  source                    = "github.com/Azure-Samples/todo-python-mongo-terraform/infra/modules/apim"
   name                      = "apim-${local.resource_token}"
   location                  = var.location
   rg_name                   = data.azurerm_resource_group.rg.name
@@ -149,7 +149,7 @@ module "apim" {
 # ------------------------------------------------------------------------------------------------------
 module "apimApi" {
   count                    = var.useAPIM ? 1 : 0
-  source                   = "github.com/Azure-Samples/todo-python-mongo-terraform/tree/main/infra/modules/apim-api"
+  source                   = "github.com/Azure-Samples/todo-python-mongo-terraform/infra/modules/apim-api"
   name                     = module.apim[0].APIM_SERVICE_NAME
   rg_name                  = data.azurerm_resource_group.rg.name
   web_front_end_url        = module.web.URI
