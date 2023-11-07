@@ -10,9 +10,9 @@ terraform {
     }
   }
 }
-locals {
-  accountName = var.runtime_version=="18-lts"?azurerm_linux_web_app.webnode[0].name:azurerm_linux_web_app.webpython[0].name
-}
+# locals {
+#   accountName = var.runtime_version=="18-lts"?azurerm_linux_web_app.webnode[0].name:azurerm_linux_web_app.webpython[0].name
+# }
 # ------------------------------------------------------------------------------------------------------
 # Deploy app service web app
 # ------------------------------------------------------------------------------------------------------
@@ -117,6 +117,6 @@ resource "null_resource" "webapp_basic_auth_disable" {
     account = var.runtime_version=="18-lts"?azurerm_linux_web_app.webnode[0].name:azurerm_linux_web_app.webpython[0].name
   }
   provisioner "local-exec" {
-    command = "az resource update --resource-group ${var.rg_name} --name ftp --namespace Microsoft.Web --resource-type basicPublishingCredentialsPolicies --parent sites/${locals.accountName} --set properties.allow=false && az resource update --resource-group ${var.rg_name} --name scm --namespace Microsoft.Web --resource-type basicPublishingCredentialsPolicies --parent sites/${locals.accountName} --set properties.allow=false"
+    command = "az resource update --resource-group ${var.rg_name} --name ftp --namespace Microsoft.Web --resource-type basicPublishingCredentialsPolicies --parent sites/${var.runtime_version=="18-lts"?azurerm_linux_web_app.webnode[0].name:azurerm_linux_web_app.webpython[0].name} --set properties.allow=false && az resource update --resource-group ${var.rg_name} --name scm --namespace Microsoft.Web --resource-type basicPublishingCredentialsPolicies --parent sites/${var.runtime_version=="18-lts"?azurerm_linux_web_app.webnode[0].name:azurerm_linux_web_app.webpython[0].name} --set properties.allow=false"
   }
 }
