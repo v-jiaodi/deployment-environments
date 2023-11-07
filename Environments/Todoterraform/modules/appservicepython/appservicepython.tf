@@ -20,6 +20,7 @@ resource "azurecaf_name" "web_name" {
   clean_input   = true
 }
 
+
 resource "azurerm_linux_web_app" "webpython" {
   count = var.runtime_version=="3.10"?1:0
   name                = azurecaf_name.web_name.result
@@ -110,10 +111,10 @@ resource "azurerm_linux_web_app" "webnode" {
 # This is a temporary solution until the azurerm provider supports the basicPublishingCredentialsPolicies resource type
 resource "null_resource" "webapp_basic_auth_disable" {
   triggers = {
-    account = false?azurerm_linux_web_app.webnode[0].name:azurerm_linux_web_app.webpython[0].name
+    account = var.runtime_version=="18-lts"?azurerm_linux_web_app.webnode[0].name:azurerm_linux_web_app.webpython[0].name
   }
 
   provisioner "local-exec" {
-    command = "az resource update --resource-group ${var.rg_name} --name ftp --namespace Microsoft.Web --resource-type basicPublishingCredentialsPolicies --parent sites/${azurerm_linux_web_app.webpython[0].name} --set properties.allow=false && az resource update --resource-group ${var.rg_name} --name scm --namespace Microsoft.Web --resource-type basicPublishingCredentialsPolicies --parent sites/${azurerm_linux_web_app.webpython[0].name} --set properties.allow=false"
+    command = "az resource update --resource-group ${var.rg_name} --name ftp --namespace Microsoft.Web --resource-type basicPublishingCredentialsPolicies --parent sites/${triggers.account} --set properties.allow=false && az resource update --resource-group ${var.rg_name} --name scm --namespace Microsoft.Web --resource-type basicPublishingCredentialsPolicies --parent sites/${triggers.account} --set properties.allow=false"
   }
 }
