@@ -18,7 +18,7 @@ data "azurerm_resource_group" "rg" {
 # Deploy application insights
 # ------------------------------------------------------------------------------------------------------
 module "applicationinsights" {
-  source           = "github.com/Azure-Samples/todo-python-mongo-terraform/infra/modules/applicationinsights"
+  source           = "./modules/applicationinsights"
   location         = var.location
   rg_name          = data.azurerm_resource_group.rg.name
   environment_name = var.environment_name
@@ -31,7 +31,7 @@ module "applicationinsights" {
 # Deploy log analytics
 # ------------------------------------------------------------------------------------------------------
 module "loganalytics" {
-  source         = "github.com/Azure-Samples/todo-python-mongo-terraform/infra/modules/loganalytics"
+  source         = "./modules/loganalytics"
   location       = var.location
   rg_name        = data.azurerm_resource_group.rg.name
   tags           = local.tags
@@ -61,7 +61,7 @@ module "keyvault" {
 # Deploy cosmos
 # ------------------------------------------------------------------------------------------------------
 module "cosmos" {
-  source         = "github.com/Azure-Samples/todo-python-mongo-terraform/infra/modules/cosmos"
+  source         = "./modules/cosmos"
   location       = var.location
   rg_name        = data.azurerm_resource_group.rg.name
   tags           = local.tags
@@ -72,7 +72,7 @@ module "cosmos" {
 # Deploy app service plan
 # ------------------------------------------------------------------------------------------------------
 module "appserviceplan" {
-  source         = "github.com/Azure-Samples/todo-python-mongo-terraform/infra/modules/appserviceplan"
+  source         = "./modules/appserviceplan"
   location       = var.location
   rg_name        = data.azurerm_resource_group.rg.name
   tags           = local.tags
@@ -83,7 +83,7 @@ module "appserviceplan" {
 # Deploy app service web app
 # ------------------------------------------------------------------------------------------------------
 module "web" {
-  source         = "github.com/Azure-Samples/todo-python-mongo-terraform/infra/modules/appservicenode"
+  source         = "./modules/appservicenode"
   location       = var.location
   rg_name        = data.azurerm_resource_group.rg.name
   resource_token = local.resource_token
@@ -135,7 +135,7 @@ module "api" {
 # ------------------------------------------------------------------------------------------------------
 module "apim" {
   count                     = var.useAPIM ? 1 : 0
-  source                    = "github.com/Azure-Samples/todo-python-mongo-terraform/infra/modules/apim"
+  source                    = "./modules/apim"
   name                      = "apim-${local.resource_token}"
   location                  = var.location
   rg_name                   = data.azurerm_resource_group.rg.name
@@ -149,7 +149,7 @@ module "apim" {
 # ------------------------------------------------------------------------------------------------------
 module "apimApi" {
   count                    = var.useAPIM ? 1 : 0
-  source                   = "github.com/Azure-Samples/todo-python-mongo-terraform/infra/modules/apim-api"
+  source                   = "./modules/apim-api"
   name                     = module.apim[0].APIM_SERVICE_NAME
   rg_name                  = data.azurerm_resource_group.rg.name
   web_front_end_url        = module.web.URI
@@ -158,48 +158,4 @@ module "apimApi" {
   api_display_name         = "Simple Todo API"
   api_path                 = "todo"
   api_backend_url          = module.api.URI
-}
-
-
-output "AZURE_COSMOS_CONNECTION_STRING_KEY" {
-  value = local.cosmos_connection_string_key
-}
-
-output "AZURE_COSMOS_DATABASE_NAME" {
-  value = module.cosmos.AZURE_COSMOS_DATABASE_NAME
-}
-
-output "AZURE_KEY_VAULT_ENDPOINT" {
-  value     = module.keyvault.AZURE_KEY_VAULT_ENDPOINT
-  sensitive = true
-}
-
-output "REACT_APP_WEB_BASE_URL" {
-  value = module.web.URI
-}
-
-output "REACT_APP_API_BASE_URL" {
-  value = var.useAPIM ? module.apimApi[0].SERVICE_API_URI : module.api.URI
-}
-
-output "AZURE_LOCATION" {
-  value = var.location
-}
-
-output "APPLICATIONINSIGHTS_CONNECTION_STRING" {
-  value     = module.applicationinsights.APPLICATIONINSIGHTS_CONNECTION_STRING
-  sensitive = true
-}
-
-output "REACT_APP_APPLICATIONINSIGHTS_CONNECTION_STRING" {
-  value     = module.applicationinsights.APPLICATIONINSIGHTS_CONNECTION_STRING
-  sensitive = true
-}
-
-output "USE_APIM" {
-  value = var.useAPIM
-}
-
-output "SERVICE_API_ENDPOINTS" {
-  value = var.useAPIM ? [ module.apimApi[0].SERVICE_API_URI, module.api.URI ] : [] 
 }
