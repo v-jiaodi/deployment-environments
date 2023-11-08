@@ -11,6 +11,7 @@
   "parameters": {
     "repoUrl": {
       "type": "string",
+      "defaultValue":"https://github.com/azure-samples/todo-nodejs-mongo",
       "allowedValues": [
           "https://github.com/azure-samples/todo-java-mongo",
           "https://github.com/azure-samples/todo-nodejs-mongo",
@@ -235,8 +236,8 @@
     "tags": {
       "azd-env-name": "[parameters('environmentType')]"
     },
-    "runtimeName":"[if(equals(parameters('repoUrl'), 'https://github.com/azure-samples/todo-java-mongo'), 'java', if(equals(parameters('repoUrl'), 'https://github.com/azure-samples/todo-python-mongo'), 'python','node'))]",
-    "runtimeVersion":"[if(equals(parameters('repoUrl'), 'https://github.com/azure-samples/todo-java-mongo'), '17-java17', if(equals(parameters('repoUrl'), 'https://github.com/azure-samples/todo-python-mongo'), '3.10','18-lts'))]"
+    "runtimeName":"[if(equals(parameters('environmentType'), 'java'), 'java', if(equals(parameters('environmentType'), 'python'), 'python','node'))]",
+    "runtimeVersion":"[if(equals(parameters('environmentType'), 'java'), '17-java17', if(equals(parameters('environmentType'), 'python'), '3.10','18-lts'))]"
   },
   "resources": [
         {
